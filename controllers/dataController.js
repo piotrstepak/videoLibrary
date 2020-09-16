@@ -24,7 +24,7 @@ function convertToTags(string) {
     let words = string.split(/\s+/);
     console.log(`received tags: ${string}`)
     // console.log(words + " |words");
-    const hashSymbol = hashSymbol;
+    const hashSymbol = '#';
     let tagsString = "";
 
     for (word of words) {
@@ -36,7 +36,50 @@ function convertToTags(string) {
     return tagsString;    
 }
 
-// TODO validacja danych po stronie servera
+function isEmailValid(email) {
+    const emailReg = /^[0-9a-z_.-]+@[0-9a-z.-]+\.[a-z]{2,3}$/i;
+    return (emailReg.test(email)) ? true : false;
+}
+
+function isUrlValid(url) {
+    const urlReg = new RegExp("^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?");
+    return (urlReg.test(url)) ? true : false;
+}
+
+function isTagsValid(tags) {
+    let tags = string.split(/\s+/);
+    const hashSymbol = '#';
+    for (tag of tags) {
+        if (tag[0] !== hashSymbol) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function validateDataFromForm(data) {//ewentualnie trimy otrzymanych danych
+    if (data['url'].length > 0 && !isUrlValid(data['url'])) {
+        return alert('Incorrect url syntax');
+    }
+    if (data['title'].trim() === '' ||  data['title'].length < 3) {
+        return alert('Titile: minimum length - 3 characters');
+    }
+    if (data['description'].trim() === '') {
+        return alert('Description is required')
+    }
+    if (data['tags'].length > 0 && !isTagsValid(data['tags'])) {
+        return alert('Incorrect tags: tags should starting with # and separated by whitelines');
+    }
+    if (data['uploaded'] !== '' && data['uploaded'].length < 3) {
+        return alert('Uploaded by: minimum length - 3 characters');
+    }
+    if (data['email'] !== '' && !isEmailValid(data['email'])) {
+        return alert('Incorrect email address');
+    }
+    //ewentualnie ify wyniesc do czytelniejszych metod
+}
+
+// TODO uzyc metody validateDataFromForm do validacji po stronie servera
 exports.saveDataToCsv = (req, res) => {
     const dataFromCsv = fs.readFileSync(filePath).toString()
                                           .split('\n')
