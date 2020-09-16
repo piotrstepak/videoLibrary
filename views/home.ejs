@@ -35,10 +35,12 @@
                         <iframe width="300" height="200" src="<%= data[i][0] %>" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
                     </td>
                     <td>
-                        <a href="/update/<%= i %>" id="<%= i %>"><%= data[i][1] %></a>
+                        <% const indexId = 7; %>
+                        <a href="/update/<%= i %>" id="<%= data[i][indexId] %>"><%= data[i][1] %></a>
                     </td>
                     <td><%= data[i][2] %></td>
-                    <% let tags = data[i][3].split('#') %>
+                    <% const tagsId = 3; %>
+                    <% let tags = data[i][tagsId].split('#') %>
                     <% tags.shift() %>
                     <td>
                         <% for (let k = 0; k < tags.length; k++) { %>
