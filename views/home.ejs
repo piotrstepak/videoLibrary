@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Video Library</title>
+    <script></script>
+    <link rel="stylesheet", href="main.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Video Library</h1>
+        <a href="/add">Add New Video</a><br><br>
+
+        <div class="search-container">
+            <form action="/" method="POST">
+                <input type="text" placeholder="Search by title or description.." name="search">
+                <button type="submit">Submit</button>
+            </form>
+          </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <% for (let i = 0; i < data[0].length - 1; i++) { %>
+                        <th><%= data[0][i] %></th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i = 1; i < data.length; i++) { %>
+                <tr id="<%= i %>">
+                    <td><%= i %></td>
+                    <td>
+                        <iframe width="300" height="200" src="<%= data[i][0] %>" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                    </td>
+                    <td>
+                        <a href="/update/<%= i %>" id="<%= i %>"><%= data[i][1] %></a>
+                    </td>
+                    <td><%= data[i][2] %></td>
+                    <% let tags = data[i][3].split('#') %>
+                    <% tags.shift() %>
+                    <td>
+                        <% for (let k = 0; k < tags.length; k++) { %>
+                            <a href="/tag/<%= tags[k] %>" id="<%= tags[k] %>">#<%= tags[k] %></a>
+                        <% } %>
+                    </td> 
+                    <% for (let j = 4; j < data[0].length - 1; j++) { %>
+                        <td><%= data[i][j] %></td>
+                    <% } %>
+                </tr>
+               <% } %>
+            </tbody>
+        </table>
+    </div>    
+</body>
+</html>
