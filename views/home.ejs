@@ -22,7 +22,7 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <% for (let i = 0; i < data[0].length - 1; i++) { %>
+                    <% for (let i = 0; i < data[0].length - 2; i++) { %>
                         <th><%= data[0][i] %></th>
                     <% } %>
                 </tr>
@@ -45,7 +45,7 @@
                             <a href="/tag/<%= tags[k] %>" id="<%= tags[k] %>">#<%= tags[k] %></a>
                         <% } %>
                     </td> 
-                    <% for (let j = 4; j < data[0].length - 1; j++) { %>
+                    <% for (let j = 4; j < data[0].length - 2; j++) { %>
                         <td><%= data[i][j] %></td>
                     <% } %>
                 </tr>

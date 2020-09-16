@@ -4,13 +4,15 @@ const filePath = 'data.csv';
 function checkIs_ElementIsntArchived_And_SubstringIsFound(data, i, req) {
     const titleId = 1;
     const descriptionId = 2;
-    return (!(data[i][data.length - 1] === 'true')) && 
+    const archivedId = 6;
+    return (!(data[i][archivedId] === 'true')) && 
             (data[i][titleId].toLowerCase().includes(req.toLowerCase()) || 
             data[i][descriptionId].toLowerCase().includes(req.toLowerCase()));
 }
 
 function checkIs_ElementIsntArchived(data, i) {
-    return !(data[i][data.length - 1] === 'true');
+    const archivedId = 6;
+    return data[i][archivedId] !== 'true';
 }
 
 function checkIs_ElementIncludeTag(data, i, receivedTag) {
@@ -18,9 +20,7 @@ function checkIs_ElementIncludeTag(data, i, receivedTag) {
     let tags = data[i][tagsId].split('#');
     tags.shift();
     for (element of tags) {
-        typeof receivedTag
-        if (element.trim() == receivedTag) {
-            
+        if (element.trim() === receivedTag) {
             return true;
         }
     }
@@ -45,8 +45,8 @@ exports.homeRandom = (req, res) => {
     };
     dataToDisplay = dataToDisplay.sort(() => Math.random() - 0.5); //sort random videos
     dataToDisplay.unshift(headers);
-    const rowsToDisplay = 6;
-    dataToDisplay.length = rowsToDisplay;
+    const rowsToDisplayIcludesHeaders = 6;
+    dataToDisplay.length = rowsToDisplayIcludesHeaders;
     // console.log(data)
     res.render('home', {data: dataToDisplay});
 };
