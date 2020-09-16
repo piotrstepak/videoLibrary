@@ -45,8 +45,8 @@ exports.homeRandom = (req, res) => {
     };
     dataToDisplay = dataToDisplay.sort(() => Math.random() - 0.5); //sort random videos
     dataToDisplay.unshift(headers);
-    const rowsToDisplay = 6;
-    dataToDisplay.length = rowsToDisplay;
+    const rowsToDisplayIcludesHeaders = 6;
+    dataToDisplay.length = rowsToDisplayIcludesHeaders;
     // console.log(data)
     res.render('home', {data: dataToDisplay});
 };

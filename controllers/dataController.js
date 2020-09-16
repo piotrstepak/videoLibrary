@@ -9,8 +9,8 @@ const filePath = 'data.csv';
 function getId(url) {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
-
-    return (match && match[2].length === 11)
+    const youtubeIdLength = 11;
+    return (match && match[2].length === youtubeIdLength)
       ? match[2]
       : null;
 }
@@ -22,23 +22,17 @@ function convertUrlToEmbed(url) {
 
 function convertToTags(string) {
     let words = string.split(/\s+/);
-    console.log(`received: ${string}`)
-    console.log(words + " |words");
-
+    console.log(`received tags: ${string}`)
+    // console.log(words + " |words");
+    const hashSymbol = hashSymbol;
     let tagsString = "";
+
     for (word of words) {
-        if (word[0] === '#') {
-            // tagsString.concat(word + ' ');
-            tagsString += word + ' ';
-            console.log(true)
-        } else {
-            console.log(false)
-            tagsString += '#' + word + ' ';
-            // tagsString.concat('#'.concat(word + ' '));
-        }
-        // (word.charAt(0) == '#') ? tagsString.concat(word.toLowerCase() + ' ') : tagsString.concat('#'.concat(word.toLowerCase() + ' '));
+        (word[0] === hashSymbol) ? 
+        tagsString.concat(`${word.toLowerCase()} `) : 
+        tagsString.concat(hashSymbol.concat(`${word.toLowerCase()} `));
     }
-    console.log(tagsString+" |str")
+    // console.log(tagsString+" |str")
     return tagsString;    
 }
 
