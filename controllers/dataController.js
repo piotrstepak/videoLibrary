@@ -55,7 +55,7 @@ exports.saveDataToCsv = (req, res) => {
     data['url'] = convertUrlToEmbed(req.body.url);
     data['tags'] = convertToTags(req.body.tags);
     console.log(data);
-    const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive', 'Index'];
+    const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive', 'Index'];//?
   
     (!fs.existsSync(filePath)) ? csvWriter = createCsvWriter({headers: headers}) 
                                : csvWriter = createCsvWriter({sendHeaders: false, separator: ';'});//zastanowic sie
@@ -69,14 +69,15 @@ exports.saveDataToCsv = (req, res) => {
 };
 
 exports.updateDataInCsv = (req, res) => {
-    //TODO Error: no headers specified, nie zapisuej(zapisuje ale tylko nowy updateowany wiersz)
+    //TODO Error: no headers specified ?
     const dataFromCsv = fs.readFileSync(filePath).toString()
                                           .split('\n')
                                           .map(e => e.trim())
                                           .map(e => e.split(';'));
     console.log(dataFromCsv);
-    // TODO pobranie konkretnego id z csv
-    const rowNumber = 1;                                      
+    console.log(`Received index: ${req.params['id']}`);
+    // req.body.index
+    const rowIndex = req.params['id'];                                      
     dataFromCsv[rowNumber] = [
         req.body.url, 
         req.body.title, 
@@ -84,17 +85,19 @@ exports.updateDataInCsv = (req, res) => {
         req.body.tags, 
         req.body.uploaded, 
         req.body.email, 
-        req.body.archive
+        req.body.archive,
+        rowIndex
     ];
-    // dataFromCsv.shift;
     console.log(dataFromCsv);
 
-    const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive'];
+     // const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive', 'Index'];
+     const headers = ['url', 'title', 'description', 'tags', 'uploaded', 'email', 'archive', 'index'];
     // const headers = ['title', 'story', 'criteria', 'value', 'estimation', 'status'];
-    (!fs.existsSync(filePath)) ? csvWriter = createCsvWriter({headers: headers}) 
-                               : csvWriter = createCsvWriter({sendHeaders: false, separator: ';'});//zastanowic sie
-
-    csvWriter.pipe(fs.createWriteStream(filePath, {flags: 'w', headers: headers}));//headersy tu ? nie dziala powyzszy ternary?
+    // (!fs.existsSync(filePath)) ? csvWriter = createCsvWriter({headers: headers}) 
+    //                            : csvWriter = createCsvWriter({sendHeaders: false, separator: ';'});//zastanowic sie
+    
+    csvWriter = createCsvWriter({sendHeaders: false, separator: ';'});//true ???
+    csvWriter.pipe(fs.createWriteStream(filePath, {flags: 'w', headers: headers}));
     csvWriter.write(dataFromCsv);
     csvWriter.end();
     //uzyc promisea
