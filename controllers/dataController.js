@@ -44,6 +44,10 @@ function convertToTags(string) {
 
 // TODO validacja danych po stronie servera
 exports.saveDataToCsv = (req, res) => {
+    const dataFromCsv = fs.readFileSync(filePath).toString()
+                                          .split('\n')
+                                          .map(e => e.trim())
+                                          .map(e => e.split(';'));
     const data = {
         url: req.body.url, 
         title: req.body.title, 
@@ -51,12 +55,13 @@ exports.saveDataToCsv = (req, res) => {
         tags: req.body.tags, 
         uploaded: req.body.uploaded,
         email: req.body.email,
-        archive: ['false']
+        archive: ['false'],
+        index: [dataFromCsv.length - 1] //pomyslec na latwiejszym dostepem do indexow z csv np od razu na stronie wyswietlac indexy z bazy
     };
     data['url'] = convertUrlToEmbed(req.body.url);
     data['tags'] = convertToTags(req.body.tags);
     console.log(data);
-    const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive'];
+    const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive', 'Index'];
   
     (!fs.existsSync(filePath)) ? csvWriter = createCsvWriter({headers: headers}) 
                                : csvWriter = createCsvWriter({sendHeaders: false, separator: ';'});//zastanowic sie
