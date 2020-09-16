@@ -47,9 +47,9 @@ function isUrlValid(url) {
 }
 
 function isTagsValid(tags) {
-    let tags = string.split(/\s+/);
+    let tagsArray = tags.split(/\s+/);
     const hashSymbol = '#';
-    for (tag of tags) {
+    for (tag of tagsArray) {
         if (tag[0] !== hashSymbol) {
             return false;
         }
