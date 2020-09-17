@@ -1,5 +1,5 @@
 
-Assignment:Video library
+Assignment: Video library
 
 Story
 
@@ -73,12 +73,12 @@ details, not creating a new Video.
 
 For the sake of make this assignment easier to understand, each User Story represents an API endpoint in the web application:
 
-Get random videos [ GET/api/videos?random=true]
+Get random videos [ GET /api/videos?random=true ]
 
     • It should return a list of 5 randomvideos.
 
 
-Add new video [ POST/api/videos]
+Add new video [ POST /api/videos ]
 
     • Request validationrules:
         ◦ Videourl:
@@ -109,7 +109,7 @@ Add new video [ POST/api/videos]
     • ... and the server should add these data to the csvstorage.
 
 
-Update existing Video [ PUT/video/{{video_id}}]
+Update existing Video [ PUT /video/{{video_id}} ]
 
     • The same form as the add page, but filled in with data of the givenVideo.
     • This data should be read from the csvfile.

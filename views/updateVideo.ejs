@@ -3,40 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Update Video | Video Library</title>
-    <script></script>
-    <link rel="stylesheet", href="main.css">
+    <script src="/scripts/formValidator.js" defer></script>
+    <link rel="stylesheet" type='text/css' href="/stylesheets/main.css">
+    <link rel="stylesheet" href="/stylesheets/form.css">
 </head>
 <body>
     <div class="container">
         <form method="POST">
-            <fieldset>
-                <legend><h1>Update Video</h1></legend>
+            <h1>Update Video</h1>
                 
-                <label for="url">Video url:</label><br>
-                <input type="url" name="url" required value="<%= data[0] %>"><br>
-                <!-- has to fit url syntax, dodac dodatkowa validacje -->
+            <label for="url">Video url:</label><br>
+            <input type="text" name="url" value="<%= data[0] %>"><br>
+            <!-- <input type="url" name="url" required><br> -->
 
-                <label for="title">Video Title:</label><br>
-                <input type="text" name="title" minlength="3" required value="<%= data[1] %>"><br>
+            <label for="title">Video Title:</label><br>
+            <input type="text" name="title" value="<%= data[1] %>"><br>
+            <!-- <input type="text" name="title" minlength="3" required><br> -->
 
-                <label for="description" name="description">Video description:</label><br>
-                <textarea name="description" id="" cols="30" rows="10" required><%= data[2] %></textarea><br>
-                
-                <label for="tags" name="tags">Tags:</label><br>
-                <input type="text" name="tags" id="" value="<%= data[3] %>"></input><br>
+            <label for="description">Video description:</label><br>
+            <!-- <input type="text" name="description"><br> -->
+            <textarea name="description" cols="30" rows="5"><%= data[2] %></textarea><br>
+            <!-- <textarea name="description" cols="30" rows="10" required></textarea><br> -->
+            
+            <label for="tags">Tags:</label><br>
+            <input type="text" name="tags" value="<%= data[3] %>"><br>
 
-                <label for="uploaded">Uploaded by:</label><br>
-                <input type="text" name="uploaded" minlength="3" value="<%= data[4] %>"><br>
+            <label for="uploaded">Uploaded by:</label><br>
+            <input type="text" name="uploaded" value="<%= data[4] %>"><br>
+            <!-- <input type="text" name="uploaded" minlength="3"><br> -->
 
-                <label for="email">Contact email:</label><br>
-                <input type="email" name="email" value="<%= data[5] %>"><br>
-                <!-- has to fit email syntax, dodac dodatkowa validacje -->
+            <label for="email">Contact email:</label><br>
+            <input type="text" name="email" value="<%= data[5] %>"><br>
+            <!-- <input type="email" name="email"><br> -->
 
-                <label for="archive">Archive:</label>
-                <input type="checkbox" name="archive" value="true"><br>
+            <label for="archive">Archive:</label>
+            <input type="checkbox" name="archive" value="true"><br>
 
-                <button type="submit" id="update-video">Update Video</button>
-            </fieldset>
+            <button type="submit" id="update-video">Update Video</button>
         </form>
     </div>
 </body>

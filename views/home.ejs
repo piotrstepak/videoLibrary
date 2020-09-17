@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1" >
     <title>Video Library</title>
     <script></script>
-    <link rel="stylesheet", href="main.css">
+    <link rel="stylesheet" type='text/css' href="/stylesheets/main.css">
+    <link rel="stylesheet" type='text/css' href="/stylesheets/home.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Video Library</h1>
+    <header>
+        <h1>Video Library</h1><br>
         <a href="/add">Add New Video</a><br><br>
 
         <div class="search-container">
@@ -17,7 +18,8 @@
                 <button type="submit">Submit</button>
             </form>
           </div>
-
+    </header>
+    <div class="container">
         <table>
             <thead>
                 <tr>
@@ -36,7 +38,7 @@
                     </td>
                     <td>
                         <% const indexId = 7; %>
-                        <a href="/update/<%= i %>" id="<%= data[i][indexId] %>"><%= data[i][1] %></a>
+                        <a href="/update/<%= data[i][indexId] %>" id="<%= data[i][indexId] %>"><%= data[i][1] %></a>
                     </td>
                     <td><%= data[i][2] %></td>
                     <% const tagsId = 3; %>
@@ -54,6 +56,6 @@
                <% } %>
             </tbody>
         </table>
-    </div>    
+    </div> 
 </body>
 </html>
