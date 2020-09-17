@@ -1,11 +1,8 @@
 var fs = require('fs');
 var createCsvWriter = require('csv-write-stream');
 const { get } = require('http');
-const headers = ['url', 'title', 'description', 'tags', 'uploaded', 'email', 'archive', 'index'];//
-var csvWriter = createCsvWriter({ headers: headers});//
+var csvWriter = createCsvWriter();
 const filePath = 'data.csv';
-// global.URL = require('url').URL;
-// var URL = require('url').URL;
 
 function getId(url) {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -45,16 +42,6 @@ function isUrlValid(url) {
     return (url.length > 0 && urlReg.test(url));
 }
 
-// function isTagsValid(tags) {
-//     let tagsArray = tags.split(/\s+/);
-//     const hashSymbol = '#';
-//     for (tag of tagsArray) {
-//         if (tag[0] !== hashSymbol) {
-//             return false;
-//         }
-//     }
-//     return true;
-// }
 function isTagsValid(tags) {
     if (tags.length == 0) {
         return true;
@@ -70,40 +57,17 @@ function isTagsValid(tags) {
 }
 
 function isTitleValid(title) {
-    return title.length >= 3 && title.trim() !== '';
+    return title.length >= 3;
 }
 
 function isDescriptionValid(desc) {
-    return desc.length > 0 && desc.trim() !== '';
+    return desc.length > 0;
 }
 
 function isUploadedValid(uploaded) {
-    return (uploaded.length == 0 && uploaded.value.trim() !== '') || 
-           (uploaded.length >= 3)
+    return uploaded.length == 0 || uploaded.length >= 3;
 }
 
-// function validateDataFromForm(data) {//ewentualnie trimy otrzymanych danych
-//     if (data['url'].length > 0 && !isUrlValid(data['url'])) {
-//         return alert('Incorrect url syntax');
-//     }
-//     if (data['title'].trim() === '' ||  data['title'].length < 3) {
-//         return alert('Titile: minimum length - 3 characters');
-//     }
-//     if (data['description'].trim() === '') {
-//         return alert('Description is required')
-//     }
-//     if (data['tags'].length > 0 && !isTagsValid(data['tags'])) {
-//         return alert('Incorrect tags: tags should starting with # and separated by whitelines');
-//     }
-//     if (data['uploaded'] !== '' && data['uploaded'].length < 3) {
-//         return alert('Uploaded by: minimum length - 3 characters');
-//     }
-//     if (data['email'] !== '' && !isEmailValid(data['email'])) {
-//         return alert('Incorrect email address');
-//     }
-// }
-
-// TODO uzyc metody validateDataFromForm do validacji po stronie servera
 exports.saveDataToCsv = (req, res) => {
     const dataFromCsv = fs.readFileSync(filePath).toString()
                                           .split('\n')
@@ -128,18 +92,15 @@ exports.saveDataToCsv = (req, res) => {
         isTagsValid(data['tags']) && 
         isUploadedValid(data['uploaded']) && 
         isEmailValid(data['email'])) {
-//jesli git to zapisac i redirect z nowymi danymi, else info i redirect ze starymi
+            console.log(data);
+            const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive', 'Index'];//?
+            (!fs.existsSync(filePath)) ? csvWriter = createCsvWriter({headers: headers}) 
+                                       : csvWriter = createCsvWriter({sendHeaders: false, separator: ';'});//zastanowic sie
+            csvWriter.pipe(fs.createWriteStream(filePath, {flags: 'a'}));
+            csvWriter.write(data);
+            csvWriter.end();
         };
-    console.log(data);
-
-    const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive', 'Index'];//?
-    (!fs.existsSync(filePath)) ? csvWriter = createCsvWriter({headers: headers}) 
-                               : csvWriter = createCsvWriter({sendHeaders: false, separator: ';'});//zastanowic sie
-    // console.log(data);
     
-    csvWriter.pipe(fs.createWriteStream(filePath, {flags: 'a'}));
-    csvWriter.write(data);
-    csvWriter.end();
     //uzyc promisea
     res.redirect('/');
 };
