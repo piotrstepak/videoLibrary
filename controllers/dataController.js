@@ -1,7 +1,8 @@
 var fs = require('fs');
 var createCsvWriter = require('csv-write-stream');
 const { get } = require('http');
-var csvWriter = createCsvWriter();
+const headers = ['url', 'title', 'description', 'tags', 'uploaded', 'email', 'archive', 'index'];//
+var csvWriter = createCsvWriter({ headers: headers});//
 const filePath = 'data.csv';
 // global.URL = require('url').URL;
 // var URL = require('url').URL;
@@ -22,8 +23,7 @@ function convertUrlToEmbed(url) {
 
 function convertToTags(string) {
     let words = string.split(/\s+/);
-    console.log(`received tags: ${string}`)
-    // console.log(words + " |words");
+    console.log(`received tags: ${string}`);
     const hashSymbol = '#';
     let tagsString = "";
 
@@ -32,7 +32,6 @@ function convertToTags(string) {
         tagsString.concat(`${word.toLowerCase()} `) : 
         tagsString.concat(hashSymbol.concat(`${word.toLowerCase()} `));
     }
-    // console.log(tagsString+" |str")
     return tagsString;    
 }
 
@@ -42,11 +41,24 @@ function isEmailValid(email) {
 }
 
 function isUrlValid(url) {
-    const urlReg = new RegExp("^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?");
-    return (urlReg.test(url)) ? true : false;
+    const urlReg = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi; 
+    return (url.length > 0 && urlReg.test(url));
 }
 
+// function isTagsValid(tags) {
+//     let tagsArray = tags.split(/\s+/);
+//     const hashSymbol = '#';
+//     for (tag of tagsArray) {
+//         if (tag[0] !== hashSymbol) {
+//             return false;
+//         }
+//     }
+//     return true;
+// }
 function isTagsValid(tags) {
+    if (tags.length == 0) {
+        return true;
+    }
     let tagsArray = tags.split(/\s+/);
     const hashSymbol = '#';
     for (tag of tagsArray) {
@@ -57,27 +69,39 @@ function isTagsValid(tags) {
     return true;
 }
 
-function validateDataFromForm(data) {//ewentualnie trimy otrzymanych danych
-    if (data['url'].length > 0 && !isUrlValid(data['url'])) {
-        return alert('Incorrect url syntax');
-    }
-    if (data['title'].trim() === '' ||  data['title'].length < 3) {
-        return alert('Titile: minimum length - 3 characters');
-    }
-    if (data['description'].trim() === '') {
-        return alert('Description is required')
-    }
-    if (data['tags'].length > 0 && !isTagsValid(data['tags'])) {
-        return alert('Incorrect tags: tags should starting with # and separated by whitelines');
-    }
-    if (data['uploaded'] !== '' && data['uploaded'].length < 3) {
-        return alert('Uploaded by: minimum length - 3 characters');
-    }
-    if (data['email'] !== '' && !isEmailValid(data['email'])) {
-        return alert('Incorrect email address');
-    }
-    //ewentualnie ify wyniesc do czytelniejszych metod
+function isTitleValid(title) {
+    return title.length >= 3 && title.trim() !== '';
 }
+
+function isDescriptionValid(desc) {
+    return desc.length > 0 && desc.trim() !== '';
+}
+
+function isUploadedValid(uploaded) {
+    return (uploaded.length == 0 && uploaded.value.trim() !== '') || 
+           (uploaded.length >= 3)
+}
+
+// function validateDataFromForm(data) {//ewentualnie trimy otrzymanych danych
+//     if (data['url'].length > 0 && !isUrlValid(data['url'])) {
+//         return alert('Incorrect url syntax');
+//     }
+//     if (data['title'].trim() === '' ||  data['title'].length < 3) {
+//         return alert('Titile: minimum length - 3 characters');
+//     }
+//     if (data['description'].trim() === '') {
+//         return alert('Description is required')
+//     }
+//     if (data['tags'].length > 0 && !isTagsValid(data['tags'])) {
+//         return alert('Incorrect tags: tags should starting with # and separated by whitelines');
+//     }
+//     if (data['uploaded'] !== '' && data['uploaded'].length < 3) {
+//         return alert('Uploaded by: minimum length - 3 characters');
+//     }
+//     if (data['email'] !== '' && !isEmailValid(data['email'])) {
+//         return alert('Incorrect email address');
+//     }
+// }
 
 // TODO uzyc metody validateDataFromForm do validacji po stronie servera
 exports.saveDataToCsv = (req, res) => {
@@ -96,10 +120,19 @@ exports.saveDataToCsv = (req, res) => {
         index: [dataFromCsv.length - 1] //pomyslec na latwiejszym dostepem do indexow z csv np od razu na stronie wyswietlac indexy z bazy
     };
     data['url'] = convertUrlToEmbed(req.body.url);
-    data['tags'] = convertToTags(req.body.tags);
+    // data['tags'] = convertToTags(req.body.tags);
+
+    if (isUrlValid(data['url']) && 
+        isTitleValid(data['title']) && 
+        isDescriptionValid(data['description']) && 
+        isTagsValid(data['tags']) && 
+        isUploadedValid(data['uploaded']) && 
+        isEmailValid(data['email'])) {
+//jesli git to zapisac i redirect z nowymi danymi, else info i redirect ze starymi
+        };
     console.log(data);
+
     const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive', 'Index'];//?
-  
     (!fs.existsSync(filePath)) ? csvWriter = createCsvWriter({headers: headers}) 
                                : csvWriter = createCsvWriter({sendHeaders: false, separator: ';'});//zastanowic sie
     // console.log(data);
@@ -112,16 +145,14 @@ exports.saveDataToCsv = (req, res) => {
 };
 
 exports.updateDataInCsv = (req, res) => {
-    //TODO Error: no headers specified ?
     const dataFromCsv = fs.readFileSync(filePath).toString()
                                           .split('\n')
                                           .map(e => e.trim())
                                           .map(e => e.split(';'));
-    console.log(dataFromCsv);
     console.log(`Received index: ${req.params['id']}`);
-    // req.body.index
-    const rowIndex = req.params['id'];                                      
-    dataFromCsv[rowNumber] = [
+    const rowIndex = req.params['id']; 
+
+    dataFromCsv[rowIndex] = [
         req.body.url, 
         req.body.title, 
         req.body.description, 
@@ -131,18 +162,22 @@ exports.updateDataInCsv = (req, res) => {
         req.body.archive,
         rowIndex
     ];
+    dataFromCsv.shift();
+    dataFromCsv.pop();
+    // dataFromCsv.slice(1, dataFromCsv.length - 1);
     console.log(dataFromCsv);
 
-     // const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive', 'Index'];
-     const headers = ['url', 'title', 'description', 'tags', 'uploaded', 'email', 'archive', 'index'];
-    // const headers = ['title', 'story', 'criteria', 'value', 'estimation', 'status'];
-    // (!fs.existsSync(filePath)) ? csvWriter = createCsvWriter({headers: headers}) 
-    //                            : csvWriter = createCsvWriter({sendHeaders: false, separator: ';'});//zastanowic sie
-    
-    csvWriter = createCsvWriter({sendHeaders: false, separator: ';'});//true ???
-    csvWriter.pipe(fs.createWriteStream(filePath, {flags: 'w', headers: headers}));
-    csvWriter.write(dataFromCsv);
+    const headers = ['Url', 'Title', 'Description', 'Tags', 'Uploaded by', 'Contact email', 'Archive', 'Index'];
+    csvWriter = createCsvWriter({
+        sendHeaders: true,
+        headers: headers,
+        separator: ';'
+      }) 
+    csvWriter.pipe(fs.createWriteStream(filePath, {flags: 'w'}));
+
+    for (data of dataFromCsv) {
+        csvWriter.write(data);
+    }
     csvWriter.end();
-    //uzyc promisea
     res.redirect('/');
-}
+};
