@@ -1,0 +1,49 @@
+form {
+    color: black;
+    background-color: rgb(0, 179, 255);
+    width: 450px;
+    border: none;
+    border-radius: 20px;
+    padding: 20px;
+    margin: auto;
+}
+
+legend {
+    background-color: rgb(0, 179, 255);
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px 20px;
+    border: none;
+}
+
+input[type=text], textarea, input[type=checkbox] {
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid black;
+    box-sizing: border-box;
+    background-color: rgb(0, 179, 255);
+    border: none;
+    border-bottom: 4px solid rgb(0, 134, 192);
+}
+
+input[type=checkbox] {
+    /* visibility: visible; */
+    background-color: aqua;
+    border: 1px solid rgb(0, 134, 192);
+}
+
+button {
+    float: none;
+    text-align: center;
+    width: 50%;
+    margin: 15px;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: rgb(0, 134, 192);
+    border: none;
+}
+
+button:hover {
+    background: rgb(4, 96, 136);
+}
