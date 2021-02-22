@@ -1,84 +1,32 @@
 
-Assignment: Video library
+# Assignment: Video library
 
-Story
+### In the project directory, you can run:
+### `node server.js`
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+## Story
 
 There is apprehension that Youtube servers will be unavailable since It’s hard to predict the nearest future. Your company has been engaged to provide internal service so Youtube data can be stored as a backup.
 
-Requirements
+## Requirements
 
 Important: For the sake of simplicity focus on the backend side - your primary job is to prepare suitable API. The requirements assume an existing page but for now it is not obligatory - you can test your API with Postman.
 
-Story title   User story description    Acceptance criteria
 
-Search videos randomly:
-As a User,
-I want to go to main page,
-So that I see 5 random
-videos.
-Given that there are any number
-({0..n}) of saved Video data,
-When I open the website (/),
-Then ensure I see a list of 5
-randomly generated videos.
+![Requirements](docs/requirements.png)
 
-Search videos by title and description:
-As a User,
-I want to search videos by
-title and description,
-So that I get 5 videos
-containing the provided
-phrase.
-Given that there are any number
-({0..n}) of saved Video data,
-When I open the website (/),
-Then ensure I see a search field
-which after submitting will list 5
-videos containing given subtext.
+![Requirements](docs/requirements_update.png)
 
-Search videos by tag:
-As a User,
-I want to search videos by
-selecting tag,
-So I get 5 suitable videos.
-When I open the website (/),
-And I click any tag link,
-Then ensure I see 5 videos
-connected with that tag.
-
-Add new video url:
-As a User,
-I want to be able to add a
-new video,
-So that I can extend the data
-When I open the website (/),
-And I click the "Add New Video" link
-Then ensure I see a form where I can
-add details of the new video,
-And if I submit the form, this data
-gets saved.
-Update
-existing
-
-As a User, I want to be able to change:
-details of an existing video,
-So that I can keep them up-
-to-date with the current info.
-Then ensure I see a form prefilled
-with the details of the Video,
-And when I submit the changed data,
-ensure it gets save,
-And ensure it overwrites the previous
-details, not creating a new Video.
 
 For the sake of make this assignment easier to understand, each User Story represents an API endpoint in the web application:
 
-Get random videos [ GET /api/videos?random=true ]
+## Get random videos [ GET /api/videos?random=true ]
 
-    • It should return a list of 5 randomvideos.
+    • It should return a list of 5 random videos.
 
 
-Add new video [ POST /api/videos ]
+## Add new video [ POST /api/videos ]
 
     • Request validationrules:
         ◦ Videourl:
@@ -109,7 +57,7 @@ Add new video [ POST /api/videos ]
     • ... and the server should add these data to the csvstorage.
 
 
-Update existing Video [ PUT /video/{{video_id}} ]
+## Update existing Video [ PUT /video/{{video_id}} ]
 
     • The same form as the add page, but filled in with data of the givenVideo.
     • This data should be read from the csvfile.
